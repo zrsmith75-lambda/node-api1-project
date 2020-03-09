@@ -4,6 +4,7 @@ const server = express();
 server.use(express.json());
 
 let users = [];
+let currentId = 1;
 
 server.get("/", (req, res) => {
   res.status(200).json({ message: "GET / is working " });
@@ -15,6 +16,16 @@ server.get("/api/users", (req, res) => {
 });
 
 // GET /api/users/:id
+server.get("/api/users/:id", (req, res) => {
+  let _id = +req.params.id;
+
+  const user = users.find(({ id }) => id === _id);
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
 
 // POST /api/user
 server.post("/api/users", (req, res) => {
@@ -24,7 +35,7 @@ server.post("/api/users", (req, res) => {
       .json({ message: `Please provide name and bio for new user!` });
   } else {
     const userInfo = req.body;
-    userInfo.id = shortid.generate();
+    userInfo.id = currentId++;
     users.push(userInfo);
     res.status(201).json(userInfo);
   }
