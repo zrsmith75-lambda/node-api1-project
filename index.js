@@ -17,7 +17,18 @@ server.get("/api/users", (req, res) => {
 // GET /api/users/:id
 
 // POST /api/user
-server.post("/api/users", (req, res) => {});
+server.post("/api/users", (req, res) => {
+  if (!req.body.name || !req.body.bio) {
+    res
+      .status(400)
+      .json({ message: `Please provide name and bio for new user!` });
+  } else {
+    const userInfo = req.body;
+    userInfo.id = shortid.generate();
+    users.push(userInfo);
+    res.status(201).json(userInfo);
+  }
+});
 
 const PORT = 5000;
 server.listen(PORT, () =>
