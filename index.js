@@ -41,6 +41,25 @@ server.post("/api/users", (req, res) => {
   }
 });
 
+// DELETE
+server.delete("/api/users/:id", (req, res) => {
+  let _id = +req.params.id;
+  const user = users.find(({ id }) => id === _id);
+  if (!user) {
+    res.status(404).json({
+      message: `User not found`
+    });
+  } else {
+    users = users.filter(i => i.id !== _id);
+    res.status(200).json({
+      message: `Deleted`,
+      user
+    });
+  }
+});
+
+// PATCH
+
 const PORT = 5000;
 server.listen(PORT, () =>
   console.log(`\n** Server is listening on http://localhost:${PORT} **\n`)
